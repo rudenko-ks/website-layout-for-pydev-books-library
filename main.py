@@ -17,7 +17,7 @@ def main():
         with open(book_file, 'wb') as file:
             file.write(response.content)
 
-        if book_id >= 10:
+        if book_id >= 11:
             break
 
 
