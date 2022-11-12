@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 books/
+bs4_tutorial.py
 
 # C extensions
 *.so
