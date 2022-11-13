@@ -19,7 +19,9 @@ python main.py [-h] [--start_id] [--end_id]
 ```
 options:
 `-h, --help` show this help message and exit
+
 `--start_id START_ID` The beginning of the range of books to be downloaded
+
 `--end_id END_ID` End of the downloadable books range
 
 > Written with [StackEdit](https://stackedit.io/).
