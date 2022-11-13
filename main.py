@@ -21,9 +21,17 @@ def get_book_name(url: str) -> str:
     book_tag = soup.find('div', id='content').find('h1')
     book_name, book_author = book_tag.text.strip().split(' \xa0 :: \xa0 ')
     book_img_url = soup.find('div', class_='bookimage').find('img')['src']
+    print(f'Заголовок: {book_name}')
+
+    if (book_comments := soup.find_all('div', class_='texts')):
+        for comment_tag in book_comments:
+            comment = comment_tag.find('span')
+            print(comment.text)
+    else:
+        print('Пользователи пока что не оставили комментарии к данной книге.' +
+              '\n')
 
     download_image(urljoin(url, book_img_url))
-
     return book_name
 
 
@@ -75,7 +83,7 @@ def main():
             book_filename = f'{book_id}. {book_name}'
             download_txt(book_download_url, book_filename)
         except requests.HTTPError:
-            print(f'Неправильная ссылка на книгу #{book_id}!')
+            print(f'\nНеправильная ссылка на книгу #{book_id}!  \n')
         else:
             if book_id >= 10:
                 break
