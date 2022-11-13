@@ -23,6 +23,12 @@ def get_book_name(url: str) -> str:
     book_img_url = soup.find('div', class_='bookimage').find('img')['src']
     print(f'Заголовок: {book_name}')
 
+    genres = []
+    if (book_genres := soup.find('span', class_='d_book').find_all('a')):
+        for genre in book_genres:
+            genres.append(genre.text)
+    print(f'Жанр книги: {genres}')
+
     if (book_comments := soup.find_all('div', class_='texts')):
         for comment_tag in book_comments:
             comment = comment_tag.find('span')
