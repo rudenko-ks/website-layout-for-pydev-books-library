@@ -5,6 +5,8 @@ from itertools import count
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import unquote, urljoin, urlsplit
+import argparse
+from argparse import RawTextHelpFormatter
 
 
 def check_for_redirect(response: requests.Response):
@@ -76,8 +78,28 @@ def download_txt(url: str, filename: str, folder: str = 'books/') -> str:
     return str(f_path)
 
 
+def create_argparser() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="""\
+        Скрипт возвращает с сайта https://tululu.org/ информацию о каждой книге, скачивает изображение и файл книги с текстом.
+        Полученная информация о книге выводится в консоль.
+        Диапзон скачиваемых книг задаётся пользователем.
+        По умолчанию скачиваются первые 10 книг.""",
+                                     formatter_class=RawTextHelpFormatter)
+    parser.add_argument('--start_id',
+                        help='Начало диапазона скачиваемых книг',
+                        type=int,
+                        default=1)
+    parser.add_argument('--end_id',
+                        help='Конец диапазона скачиваемых книг',
+                        type=int,
+                        default=10)
+    return parser.parse_args()
+
+
 def main():
-    for book_id in count(1):
+    args = create_argparser()
+
+    for book_id in range(args.start_id, args.end_id):
         book_page_url = f'https://tululu.org/b{book_id}/'
         book_download_url = f"https://tululu.org/txt.php?id={book_id}"
 
@@ -103,9 +125,6 @@ def main():
 
         except requests.HTTPError:
             print(f'\nНеправильная ссылка на книгу #{book_id}!')
-        else:
-            if book_id >= 10:
-                break
 
 
 if __name__ == '__main__':
