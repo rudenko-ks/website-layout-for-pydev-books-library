@@ -52,7 +52,10 @@ def download_image(url: str, folder: str = 'images/'):
         file.write(response.content)
 
 
-def download_txt(url: str, filename: str, folder: str = 'books/') -> str:
+def download_txt(url: str,
+                 book_id: int,
+                 filename: str,
+                 folder: str = 'books/') -> str:
     """Функция для скачивания текстовых файлов.
 
     Args:
@@ -63,7 +66,8 @@ def download_txt(url: str, filename: str, folder: str = 'books/') -> str:
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    response = requests.get(url)
+    params = {'id': book_id}
+    response = requests.get(url, params=params)
     response.raise_for_status()
     check_for_redirect(response=response)
 
@@ -101,7 +105,7 @@ def main():
 
     for book_id in range(args.start_id, args.end_id):
         book_page_url = f'https://tululu.org/b{book_id}/'
-        book_download_url = f"https://tululu.org/txt.php?id={book_id}"
+        book_download_url = f"https://tululu.org/txt.php"
 
         try:
             response = requests.get(book_page_url)
@@ -110,7 +114,7 @@ def main():
             book = parse_book_page(response)
 
             book_filename = f"{book_id}. {book['name']}"
-            download_txt(book_download_url, book_filename)
+            download_txt(book_download_url, book_id, book_filename)
             download_image(urljoin(book_page_url, book['img_url']))
 
             print(f'\nЗаголовок: {book["name"]}')
