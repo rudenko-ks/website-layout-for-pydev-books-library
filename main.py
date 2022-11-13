@@ -129,6 +129,10 @@ def main():
 
         except requests.HTTPError:
             print(f'\nНеправильная ссылка на книгу #{book_id}!')
+        except requests.ConnectionError:
+            print(f'\nОшибка подключения. Проверьте интернет соединение.')
+        except requests.ReadTimeout:
+            print(f'\nВремя ожидания запроса истекло.')
 
 
 if __name__ == '__main__':
