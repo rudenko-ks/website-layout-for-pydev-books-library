@@ -1,7 +1,6 @@
-import os
+import time
 import requests
 from pathlib import Path
-from itertools import count
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import unquote, urljoin, urlsplit
@@ -102,6 +101,7 @@ def create_argparser() -> argparse.Namespace:
 
 
 def main():
+    connection_timeout = 10
     args = create_argparser()
 
     for book_id in range(args.start_id, args.end_id):
@@ -132,6 +132,7 @@ def main():
             print(f'\nНеправильная ссылка на книгу #{book_id}!')
         except requests.ConnectionError:
             print(f'\nОшибка подключения. Проверьте интернет соединение.')
+            time.sleep(connection_timeout)
         except requests.ReadTimeout:
             print(f'\nВремя ожидания запроса истекло.')
 
