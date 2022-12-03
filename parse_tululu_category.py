@@ -1,3 +1,5 @@
+import argparse
+from itertools import count
 import json
 import time
 import requests
@@ -18,15 +20,52 @@ def save_books_as_json(books: list) -> None:
         json.dump(books, json_file, indent=4, ensure_ascii=False)
 
 
+def get_all_category_pages(url_template: str, category_id: int) -> int:
+    url = url_template.format(category=category_id, page=1)
+    response = requests.get(url)
+    response.raise_for_status()
+    soup = BeautifulSoup(markup=response.text, features='lxml')
+    count_page_selector = '.ow_px_td .center .npage'
+    if (count_page := soup.select(count_page_selector)):
+        return int(count_page[-1].text)
+    else:
+        return 0
+
+
+def create_argparser() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="""\
+        Скрипт возвращает с сайта https://tululu.org/ информацию о каждой
+        книге, скачивает изображение и файл книги с текстом в заданном
+        диапазоне из категории "Научная фантастика".
+        Полученная информация о книге выводится в консоль.
+        Диапзон скачиваемых книг задаётся пользователем.
+        По умолчанию скачиваются первые 5 страниц.""",
+                                     formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--start_page',
+                        help='Начало диапазона скачиваемых страниц',
+                        type=int,
+                        default=1)
+    parser.add_argument('--end_page',
+                        help='Конец диапазона скачиваемых страниц',
+                        type=int)
+    return parser.parse_args()
+
+
 def main():
+    args = create_argparser()
     connection_timeout = 10
     sci_fi_category_id = 55
     book_download_url = f'https://tululu.org/txt.php'
-
+    genre_page_url_template = 'https://tululu.org/l{category}/{page}/'
     book_collection = []
-    for page in range(1, 2):
-        genre_page_url = f'https://tululu.org/l{sci_fi_category_id}/{page}/'
 
+    if not args.end_page:
+        args.end_page = get_all_category_pages(genre_page_url_template,
+                                               sci_fi_category_id)
+
+    for page in range(args.start_page, args.end_page):
+        genre_page_url = genre_page_url_template.format(category=sci_fi_category_id,
+                                                        page=page)
         try:
             response = requests.get(genre_page_url)
             response.raise_for_status()
@@ -53,7 +92,7 @@ def main():
                             book_collection.append(book)
 
                     except requests.HTTPError:
-                        print(f'\nНеправильная ссылка на книгу: {book_page_url}!')
+                        print(f'\nНеправильная ссылка на книгу: {book_page_url}')
 
         except requests.HTTPError:
             print(f'\nНеправильная ссылка на категорию: {genre_page_url}')
