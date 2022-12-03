@@ -8,7 +8,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from main import check_for_redirect, parse_book_page, download_image, download_txt
+from parse_tululu_books import check_for_redirect, parse_book_page, download_image, download_txt
 
 
 def get_book_page(url: str) -> bool:
