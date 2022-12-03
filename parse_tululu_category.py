@@ -30,7 +30,7 @@ def get_all_category_pages(url_template: str, category_id: int) -> int:
     response.raise_for_status()
     soup = BeautifulSoup(markup=response.text, features='lxml')
     count_page_selector = '.ow_px_td .center .npage'
-    if (count_page := soup.select(count_page_selector)):
+    if count_page := soup.select(count_page_selector):
         return int(count_page[-1].text)
     else:
         return 0
@@ -92,7 +92,7 @@ def main():
             soup = BeautifulSoup(markup=response.text, features='lxml')
 
             book_cards_selector = '.d_book .bookimage a'
-            if (book_cards := soup.select(book_cards_selector)):
+            if book_cards := soup.select(book_cards_selector):
                 for book_card in book_cards:
                     book_url_slug = book_card['href']
                     book_page_url = urljoin(genre_page_url, book_url_slug)
