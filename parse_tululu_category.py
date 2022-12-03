@@ -33,10 +33,10 @@ def main():
             check_for_redirect(response=response)
             soup = BeautifulSoup(markup=response.text, features='lxml')
 
-            if (book_cards := soup.find_all('table', class_='d_book')):
+            book_cards_selector = '.d_book .bookimage a'
+            if (book_cards := soup.select(book_cards_selector)):
                 for book_card in book_cards:
-                    book_url_slug = book_card.find('div',
-                                                   class_='bookimage').find('a')['href']
+                    book_url_slug = book_card['href']
                     book_page_url = urljoin(genre_page_url, book_url_slug)
 
                     try:
