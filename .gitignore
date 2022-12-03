@@ -6,6 +6,7 @@ __pycache__/
 images/
 books/
 bs4_tutorial.py
+*.json
 
 # C extensions
 *.so
