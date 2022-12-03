@@ -19,8 +19,11 @@ pip install -r requirements.txt
 python parse_tululu_books.py [-h] [--start_id] [--end_id]
 ```
 options:
+
 `-h, --help` show this help message and exit
+
 `--start_id START_ID` The beginning of the range of books to be downloaded (`default=1`)
+
 `--end_id END_ID` End of the downloadable books range (`default=10`)
 
 ### parse_tululu_category.py
@@ -28,12 +31,19 @@ options:
 python parse_tululu_category.py [-h] [--start_page] [--end_page] [--dest_folder] [--json_path] [--skip_imgs] [--skip_txt]
 ```
 options:
+
 `-h, --help` show this help message and exit
+
 `--start_page START_ID` The beginning of the range of books to be downloaded (`default=1`)
+
 `--end_page END_ID` End of the downloadable books range. if not present, then download all pages
+
 `--dest_folder PATH` Path to directory with parsing results: pictures, books, JSON (`default="books\"`)
+
 `--json_path PATH` Specify path to `*.json` file with results (`default="books\"`)
+
 `--skip_imgs` Do not download pictures (`default=False`)
+
 `--skip_txt` Do not download books (`default=False`)
 
 
