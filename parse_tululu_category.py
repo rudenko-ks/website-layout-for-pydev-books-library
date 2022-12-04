@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 from parse_tululu_books import check_for_redirect, parse_book_page, download_image, download_txt
 
 
-def get_book_page(url: str) -> bool:
+def get_book_page(url: str) -> requests.Response:
     response = requests.get(url)
     response.raise_for_status()
     check_for_redirect(response=response)
@@ -102,7 +102,7 @@ def main():
                             book = parse_book_page(book_page)
                             book_id = ''.join(
                                 char for char in book_url_slug if char.isdigit())
-                            book_filename = f"{book_id}. {book['name']}"
+                            book_filename = f"{book_id}. {book['title']}"
 
                             book_file_path = ''
                             if not args.skip_txt:
@@ -121,7 +121,7 @@ def main():
                         print(f'\nНеправильная ссылка на книгу: {book_page_url}')
 
         except KeyboardInterrupt:
-            print(f'Остановлено пользователем.')
+            print(f'\nОстановлено пользователем.')
             sys.exit(0)
         except requests.HTTPError:
             print(f'\nНеправильная ссылка на категорию: {genre_page_url}')

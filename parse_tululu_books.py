@@ -31,7 +31,7 @@ def parse_book_page(response: requests.Response) -> dict:
             book_comments.append(comment.text)
 
     return {
-        'name': book_name,
+        'title': book_name,
         'author': book_author,
         'genres': book_genres,
         'img_url': book_img_url,
@@ -51,10 +51,7 @@ def download_image(url: str, folder: str = 'images/'):
         file.write(response.content)
 
 
-def download_txt(url: str,
-                 book_id: int,
-                 filename: str,
-                 folder: str = 'books/') -> str:
+def download_txt(url: str, book_id: int, filename: str, folder: str = 'books/') -> str:
     """Функция для скачивания текстовых файлов.
 
     Args:
@@ -114,19 +111,17 @@ def main():
             check_for_redirect(response=response)
             book = parse_book_page(response)
 
-            book_filename = f"{book_id}. {book['name']}"
+            book_filename = f"{book_id}. {book['title']}"
             download_txt(book_download_url, book_id, book_filename)
             download_image(urljoin(book_page_url, book['img_url']))
 
-            print(f'\nЗаголовок: {book["name"]}')
+            print(f'\nЗаголовок: {book["title"]}')
             print(f'Жанр книги: {book["genres"]}')
 
             if book["comments"]:
                 print("\n".join(comment for comment in book["comments"]))
             else:
-                print(
-                    'Пользователи пока что не оставили комментарии к данной книге.'
-                )
+                print('Пользователи пока что не оставили комментарии к данной книге.')
 
         except requests.HTTPError:
             print(f'\nНеправильная ссылка на книгу #{book_id}!')
