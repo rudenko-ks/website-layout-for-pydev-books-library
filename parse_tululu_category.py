@@ -51,12 +51,13 @@ def create_argparser() -> argparse.Namespace:
                         default=1)
     parser.add_argument('--end_page',
                         help='Конец диапазона скачиваемых страниц',
-                        type=int)
+                        type=int,
+                        default=10)
     parser.add_argument(
         '--dest_folder',
         help='Путь к каталогу с результатами парсинга: картинкам, книгам, JSON.',
         type=str,
-        default='books/')
+        default='library/')
     parser.add_argument('--json_path',
                         help='Указать свой путь к *.json файлу с результатами.',
                         type=str)
@@ -108,12 +109,13 @@ def main():
                             if not args.skip_txt:
                                 book_file_path = download_txt(
                                     book_download_url, book_id, book_filename,
-                                    args.dest_folder)
+                                    f'{args.dest_folder}/books/')
 
                             if not args.skip_imgs:
-                                download_image(urljoin(book_page_url, book['img_url']),
-                                               args.dest_folder)
+                                img_src = download_image(urljoin(book_page_url, book['img_url']),
+                                               f'{args.dest_folder}/images/')
 
+                            book['img_src'] = img_src
                             book['book_path'] = book_file_path
                             book_collection.append(book)
 

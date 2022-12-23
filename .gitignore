@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 images/
-books/
+library/
 bs4_tutorial.py
 *.json
 

@@ -1,3 +1,4 @@
+import pathlib
 import time
 import requests
 from pathlib import Path
@@ -39,7 +40,7 @@ def parse_book_page(response: requests.Response) -> dict:
     }
 
 
-def download_image(url: str, folder: str = 'images/'):
+def download_image(url: str, folder: str = 'images/') -> str:
     response = requests.get(url)
     response.raise_for_status()
 
@@ -50,6 +51,7 @@ def download_image(url: str, folder: str = 'images/'):
     with open(f_path, 'wb') as file:
         file.write(response.content)
 
+    return pathlib.PureWindowsPath(f_path).as_posix()
 
 def download_txt(url: str, book_id: int, filename: str, folder: str = 'books/') -> str:
     """Функция для скачивания текстовых файлов.
@@ -76,7 +78,7 @@ def download_txt(url: str, book_id: int, filename: str, folder: str = 'books/') 
     with open(f_path, 'wb') as file:
         file.write(response.content)
 
-    return str(f_path)
+    return pathlib.PureWindowsPath(f_path).as_posix()
 
 
 def create_argparser() -> argparse.Namespace:
